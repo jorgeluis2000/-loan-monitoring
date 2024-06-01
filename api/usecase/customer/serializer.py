@@ -8,4 +8,3 @@ class CustomerSerializer(serializers.ModelSerializer):
         fields = ('score', 'external_id', 'status',
                   'updated_at', 'created_at', 'preapproved_at')
         read_only_fields = ('created_at',)
-        # fields = '__all__'
