@@ -10,7 +10,10 @@ class Loan(models.Model):
     status = models.PositiveSmallIntegerField(default=1,choices=STATUS_LOAN)
     contract_version = models.CharField(max_length=30)
     maximum_payment_date = models.DateTimeField()
-    customer_id = models.ForeignKey(Customer, on_delete=models.DO_NOTHING)
+    customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE)
     take_at = models.DateTimeField()
     updated_at  = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self) -> str:
+        return self.external_id + ' - ' + self.customer_id.external_id

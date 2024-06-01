@@ -9,3 +9,6 @@ class PaymentDetail(models.Model):
     amount = models.DecimalField(max_digits=20, decimal_places=10)
     loan_id = models.ForeignKey(Loan, on_delete=models.DO_NOTHING)
     payment_id = models.ForeignKey(Payment, on_delete=models.DO_NOTHING)
+    
+    def __str__(self) -> str:
+        return self.loan_id.external_id + ' - ' + self.payment_id.external_id

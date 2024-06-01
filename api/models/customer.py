@@ -8,3 +8,6 @@ class Customer(models.Model):
     status = models.PositiveSmallIntegerField(default=1,choices=STATUS_CUSTOMER)
     score = models.DecimalField(max_digits=12, decimal_places=2)
     preapproved_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self) -> str:
+        return self.external_id + ' - ' + str(self.score)
