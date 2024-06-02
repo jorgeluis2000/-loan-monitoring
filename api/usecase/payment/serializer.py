@@ -8,6 +8,19 @@ from utils.functions.helpers import extract_customer_id
 
 
 class PaymentSerializer(serializers.ModelSerializer):
+    """
+    Serializador para el modelo Payment.
+
+    Campos:
+        - external_id: El identificador externo del pago.
+        - customer_id: El ID del cliente asociado al pago.
+        - payments_loan_detail: Detalles del pago relacionados con los préstamos.
+        - created_at: La fecha de creación del pago.
+        - updated_at: La fecha de actualización del pago.
+        - status: El estado del pago.
+        - paid_at: La fecha de pago del préstamo.
+        - total_amount: El monto total del pago.
+    """
     payments_loan_detail = PaymentDetailObjectSerializer(many=True)
 
     class Meta:
@@ -18,6 +31,20 @@ class PaymentSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def create(self, validated_data):
+        """
+        Método para crear un nuevo pago.
+
+        Realiza una validación y operaciones personalizadas antes de crear el pago y sus detalles relacionados.
+
+        Args:
+            validated_data (dict): Los datos validados del pago.
+
+        Returns:
+            Payment: La instancia del pago creado.
+
+        Raises:
+            serializers.ValidationError: Si hay un problema con los datos del pago o sus detalles.
+        """
         total_amount = 0
         customer = extract_customer_id(str(validated_data['customer_id']))
         payment_details_data: list[PaymentDetail] = validated_data.pop(
@@ -70,6 +97,18 @@ class PaymentSerializer(serializers.ModelSerializer):
 
 
 class PaymentGetSerializer(serializers.ModelSerializer):
+    """
+    Serializador para mostrar los detalles básicos de un pago.
+
+    Campos:
+        - external_id: El identificador externo del pago.
+        - customer_id: El ID del cliente asociado al pago.
+        - status: El estado del pago.
+        - paid_at: La fecha de pago del préstamo.
+        - total_amount: El monto total del pago.
+        - created_at: La fecha de creación del pago.
+        - updated_at: La fecha de actualización del pago.
+    """
     class Meta:
         model = Payment
         fields = ('external_id', 'customer_id', 'status', 'paid_at',
@@ -78,6 +117,19 @@ class PaymentGetSerializer(serializers.ModelSerializer):
 
 
 class PaymentCreatedSerializer(serializers.ModelSerializer):
+    """
+    Serializador para mostrar los detalles de un pago creado.
+
+    Campos:
+        - external_id: El identificador externo del pago.
+        - customer_external_id: El identificador externo del cliente asociado al pago.
+        - loan_external_id: El identificador externo del préstamo asociado al pago.
+        - payment_date: La fecha de pago del préstamo.
+        - status: El estado del pago.
+        - total_amount: El monto total del pago.
+        - payment_amount: El monto del pago.
+        - payments_details: Detalles del pago.
+    """
     customer_external_id = serializers.SerializerMethodField()
     loan_external_id = serializers.SerializerMethodField()
     payment_amount = serializers.SerializerMethodField()
@@ -93,9 +145,27 @@ class PaymentCreatedSerializer(serializers.ModelSerializer):
                             'payment_date', 'status', 'total_amount', 'payment_amount',)
 
     def get_customer_external_id(self, payment):
+        """
+        Método para obtener el identificador externo del cliente asociado al pago.
+
+        Args:
+            payment (Payment): La instancia del pago.
+
+        Returns:
+            str: El identificador externo del cliente.
+        """
         return payment.customer_id.external_id
 
     def get_loan_external_id(self, payment):
+        """
+        Método para obtener el identificador externo del préstamo asociado al pago.
+
+        Args:
+            payment (Payment): La instancia del pago.
+
+        Returns:
+            str: El identificador externo del préstamo.
+        """
         payment_detail = PaymentDetail.objects.filter(
             payment_id=payment.id).first()
         if payment_detail:
@@ -103,6 +173,15 @@ class PaymentCreatedSerializer(serializers.ModelSerializer):
         return None
 
     def get_payment_amount(self, payment):
+        """
+        Método para obtener el monto del pago.
+
+        Args:
+            payment (Payment): La instancia del pago.
+
+        Returns:
+            float: El monto del pago.
+        """
         payment_detail = PaymentDetail.objects.filter(
             payment_id=payment.id).first()
         if payment_detail:

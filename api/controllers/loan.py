@@ -6,11 +6,17 @@ from api.models.loan import Loan
 
 
 class LoanViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint que permite ver, crear, actualizar o eliminar préstamos.
+    """
     queryset = Loan.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = LoanSerializer
 
     def create(self, request, *args, **kwargs):
+        """
+        Crea un nuevo préstamo a partir de los datos proporcionados en la solicitud.
+        """
         serializer = LoanSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             self.perform_create(serializer)
@@ -22,6 +28,9 @@ class LoanViewSet(viewsets.ModelViewSet):
 
 @api_view(['GET'])
 def get_loans_by_customer(request, pk_customer):
+    """
+    Obtiene todos los préstamos asociados a un cliente específico.
+    """
     loans = Loan.objects.filter(customer_id=pk_customer)
     serializer = LoansByCustomerSerializer(loans, many=True)
     return Response(serializer.data)

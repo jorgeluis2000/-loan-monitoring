@@ -1,11 +1,11 @@
 from django.db import models
-from .customer import Customer
+from .customer import Customer  # Importación del modelo Customer
 from utils.constants.status import STATUS_LOAN
 
-# Create your models here.
-
-
 class Loan(models.Model):
+    """
+    Modelo que representa un préstamo en el sistema.
+    """
     external_id = models.CharField(unique=True, max_length=60)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
     score = models.DecimalField(max_digits=12, decimal_places=2, default=0.0)
@@ -20,4 +20,7 @@ class Loan(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
+        """
+        Método que devuelve una representación legible en cadena del objeto Loan.
+        """
         return f'{self.id} - {self.external_id} - {self.customer_id.external_id}'
