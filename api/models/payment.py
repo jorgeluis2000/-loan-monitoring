@@ -15,4 +15,4 @@ class Payment(models.Model):
     customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE)
     
     def __str__(self) -> str:
-        return self.external_id + ' - ' + self.customer_id.external_id
+        return f'{self.id} - {self.external_id} - {self.customer_id.external_id}'

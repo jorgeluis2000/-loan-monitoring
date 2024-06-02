@@ -10,4 +10,4 @@ class Customer(models.Model):
     preapproved_at = models.DateTimeField(auto_now=True)
     
     def __str__(self) -> str:
-        return self.external_id + ' - ' + str(self.score)
+        return f'{self.id} - {self.external_id}'

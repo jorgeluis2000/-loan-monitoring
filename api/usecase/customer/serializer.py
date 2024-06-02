@@ -19,12 +19,12 @@ class CustomerBalanceSerializer(serializers.ModelSerializer):
         model = Customer
         fields = ('external_id', 'score', 'total_debt', 'available_amount')
 
-    def get_customer_total_debt(self, customer) -> float:
+    def get_customer_total_debt(self, customer: Customer) -> float:
         sumOfAllLoans = 0.0
         listLoans = list(Loan.objects.filter(customer_id=customer.id).values('outstanding'))
         for loanSum in listLoans:
-            sumOfAllLoans += loanSum['outstanding']
+            sumOfAllLoans += float(loanSum['outstanding'])
         return sumOfAllLoans
 
-    def get_customer_amount(self, customer) -> float:
+    def get_customer_amount(self, customer: Customer) -> float:
         return float(customer.score) - self.get_customer_total_debt(customer)

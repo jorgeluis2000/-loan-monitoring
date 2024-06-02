@@ -17,4 +17,4 @@ class Loan(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self) -> str:
-        return self.external_id + ' - ' + self.customer_id.external_id
+        return f'{self.id} - {self.external_id} - {self.customer_id.external_id}'
