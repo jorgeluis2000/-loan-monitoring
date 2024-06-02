@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
-from api.controllers.customer import CustomerViewSet
+from api.controllers.customer import CustomerViewSet, get_customer_balance
 from api.controllers.loan import LoanViewSet
 from api.controllers.payment import PaymentViewSet
 from api.controllers.paymentdetail import PaymentDetailViewSet
@@ -12,5 +12,6 @@ CrudRouter.register(r'payments', viewset=PaymentViewSet)
 CrudRouter.register(r'paymentdetails', viewset=PaymentDetailViewSet)
 
 urlpatterns = [
-    path('',include(CrudRouter.urls))
+    path('',include(CrudRouter.urls)),
+    path('customer-balance/<int:pk>', get_customer_balance, name="customer-balance")
 ]

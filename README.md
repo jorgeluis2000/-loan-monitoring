@@ -16,6 +16,12 @@ Comando para realizar la migración
 python manage.py migrate
 ```
 
+Comando para crear super usuario.
+
+```bash
+python manage.py createsuperuser
+```
+
 Comando para iniciar servidor.
 
 ```bash

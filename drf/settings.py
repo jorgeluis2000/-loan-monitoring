@@ -84,8 +84,6 @@ WSGI_APPLICATION = 'drf.wsgi.application'
 DATABASES = {
     'default': env.DATABASE_URL
 }
-print('DATABASE', DATABASES)
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 

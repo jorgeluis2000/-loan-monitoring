@@ -14,6 +14,7 @@ class Loan(models.Model):
     take_at = models.DateTimeField()
     updated_at  = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    outstanding = models.DecimalField(max_digits=12, decimal_places=2, default=0.0)
     
     def __str__(self) -> str:
         return self.external_id + ' - ' + self.customer_id.external_id
