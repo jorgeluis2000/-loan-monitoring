@@ -1,16 +1,7 @@
 from rest_framework import serializers
 from api.models.loan import Loan
 from api.models.customer import Customer
-
-
-def extract_customer_id(customer_id_str) -> int:
-    """
-    Extrae el ID del cliente de un string con el formato '<id> - <external_id>'
-    """
-    if isinstance(customer_id_str, str):
-        print('Id esperada', customer_id_str)
-        return int(customer_id_str.split(' - ')[0])
-    raise ValueError("customer_id_str debe ser una cadena")
+from utils.functions.helpers import extract_customer_id
 
 
 class LoanSerializer(serializers.ModelSerializer):
@@ -32,7 +23,7 @@ class LoanSerializer(serializers.ModelSerializer):
         except Customer.DoesNotExist:
             raise serializers.ValidationError("El cliente no existe.")
         total_debt = 0
-        for operator_loan in Loan.objects.filter(customer_id=customer_id):
+        for operator_loan in Loan.objects.filter(customer_id=customer_id, status=2):
             total_debt += float(operator_loan.outstanding)
 
         # Calcular el available_amount del cliente
@@ -58,7 +49,8 @@ class LoanCreatedSerializer(serializers.ModelSerializer):
         model = Loan
         fields = ('external_id', 'customer_external_id',
                   'amount', 'outstanding', 'status')
-        read_only_fields = ('created_at', 'status',)
+        read_only_fields = ('external_id', 'customer_external_id',
+                  'amount', 'outstanding', 'status',)
 
     def get_customer_external_id(self, loan: Loan) -> str:
         return loan.customer_id.external_id

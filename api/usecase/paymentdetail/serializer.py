@@ -8,4 +8,10 @@ class PaymentDetailSerializer(serializers.ModelSerializer):
         fields = ('created_at', 'updated_at',
                   'amount', 'loan_id', 'payment_id',)
         read_only_fields = ('created_at',)
-        # fields = '__all__'
+
+
+class PaymentDetailObjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PaymentDetail
+        fields = ('created_at', 'updated_at', 'amount', 'loan_id',)
+        read_only_fields = ('created_at', 'payment_id')
