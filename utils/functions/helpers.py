@@ -4,4 +4,6 @@ def extract_customer_id(customer_id_str: str) -> int:
     """
     if isinstance(customer_id_str, str):
         return int(customer_id_str.split(' - ')[0])
-    raise ValueError("customer_id_str debe ser una cadena")
+
+def jsonDefault(object):
+    return object.__dict__

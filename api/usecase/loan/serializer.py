@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.db import transaction
 from api.models.loan import Loan
 from api.models.customer import Customer
 from utils.functions.helpers import extract_customer_id
@@ -11,6 +12,7 @@ class LoanSerializer(serializers.ModelSerializer):
                   'amount', 'outstanding', 'status',)
         read_only_fields = ('created_at', 'status', 'outstanding',)
 
+    @transaction.atomic
     def validate(self, data):
         customer_id_str = str(data.get('customer_id'))
         amount = data.get('amount')
@@ -35,6 +37,7 @@ class LoanSerializer(serializers.ModelSerializer):
                 f"El monto solicitado más la deuda total no pueden superar el monto disponible. Actualmente este es tu monto disponible: {available_amount}")
         return data
 
+    @transaction.atomic
     def create(self, validated_data):
         # Igualar el monto por pagar al monto solicitado
         validated_data['outstanding'] = validated_data['amount']
