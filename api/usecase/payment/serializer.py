@@ -22,6 +22,8 @@ class PaymentSerializer(serializers.ModelSerializer):
         customer = extract_customer_id(str(validated_data['customer_id']))
         payment_details_data: list[PaymentDetail] = validated_data.pop(
             'payments_loan_detail')
+        loans = Loan.objects.filter(customer_id=customer, status=2)
+        rejected = False
 
         # Crear los detalles del pago
         for payment_detail_data in payment_details_data:
@@ -29,12 +31,16 @@ class PaymentSerializer(serializers.ModelSerializer):
         validated_data['total_amount'] = total_amount
         # Calcular la suma de todos los préstamos del cliente
         total_loans_amount = 0
-        loans = Loan.objects.filter(customer_id=customer, status=2)
         for active_loan in loans:
             total_loans_amount += float(active_loan.outstanding)
 
+        for payment_detail_data in payment_details_data:
+            loan_compared = Loan.objects.get(
+                id=extract_customer_id(str(payment_detail_data['loan_id'])))
+            if float(payment_detail_data['amount']) > loan_compared.outstanding:
+                rejected = True
         # Verificar si el total_amount del payment supera la suma de los préstamos
-        if total_amount > total_loans_amount:
+        if total_amount > total_loans_amount or rejected != False:
             # Establecer el estado en 2 (rechazado)
             validated_data['status'] = 2
         else:
@@ -48,15 +54,18 @@ class PaymentSerializer(serializers.ModelSerializer):
             payment_detail = PaymentDetail.objects.create(
                 payment_id=payment, **payment_detail_data)
             payment_detail.save()
-            loan_updated = Loan.objects.get(id=extract_customer_id(str(payment_detail_data['loan_id'])))
-            if int(loan_updated.customer_id.pk) == customer:
-                raise serializers.ValidationError(f'El cliente {str(payment_detail_data["loan_id"])} no cuenta con la deuda {str(payment_detail_data["loan_id"])}')
-            loan_updated.amount -= payment_detail.amount
-            if loan_updated.amount < 0:
-                loan_updated.amount = 0
-            if loan_updated.amount == 0:
-                loan_updated.status = 4
-            loan_updated.save()
+            if (rejected != True):
+                loan_updated = Loan.objects.get(
+                    id=extract_customer_id(str(payment_detail_data['loan_id'])))
+                if int(loan_updated.customer_id.pk) != customer:
+                    raise serializers.ValidationError(
+                        f'El cliente {str(payment_detail_data["loan_id"])} no cuenta con la deuda {str(payment_detail_data["loan_id"])}')
+                loan_updated.outstanding -= payment_detail.amount
+                if loan_updated.outstanding < 0:
+                    loan_updated.outstanding = 0
+                if loan_updated.outstanding == 0:
+                    loan_updated.status = 4
+                loan_updated.save()
         return payment
 
 

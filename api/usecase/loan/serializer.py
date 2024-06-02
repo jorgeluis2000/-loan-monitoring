@@ -21,7 +21,7 @@ class LoanSerializer(serializers.ModelSerializer):
         customer_id = extract_customer_id(customer_id_str)
         # Obtener el cliente
         try:
-            customer = Customer.objects.get(id=customer_id)
+            customer = Customer.objects.get(pk=customer_id)
         except Customer.DoesNotExist:
             raise serializers.ValidationError("El cliente no existe.")
         total_debt = 0
@@ -32,7 +32,7 @@ class LoanSerializer(serializers.ModelSerializer):
         available_amount = float(customer.score) - float(total_debt)
 
         # Validar que el monto solicitado más la deuda total no supere el available_amount
-        if (float(amount) + total_debt) > available_amount:
+        if float(amount) > available_amount:
             raise serializers.ValidationError(
                 f"El monto solicitado más la deuda total no pueden superar el monto disponible. Actualmente este es tu monto disponible: {available_amount}")
         return data

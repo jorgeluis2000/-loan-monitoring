@@ -23,7 +23,7 @@ class CustomerBalanceSerializer(serializers.ModelSerializer):
     def get_customer_total_debt(self, customer: Customer) -> float:
         sumOfAllLoans = 0.0
         listLoans = list(Loan.objects.filter(
-            customer_id=customer.id).values('outstanding'))
+            customer_id=customer.id, status=2).values('outstanding'))
         for loanSum in listLoans:
             sumOfAllLoans += float(loanSum['outstanding'])
         return sumOfAllLoans
