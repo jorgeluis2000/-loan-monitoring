@@ -3,9 +3,12 @@ from api.models.loan import Loan
 
 
 class LoanSerializer(serializers.ModelSerializer):
+    customer_external_id = serializers.SerializerMethodField(
+        'get_customer_external_id')
     class Meta:
         model = Loan
-        fields = ('external_id', 'amount', 'score', 'status', 'contract_version', 'outstanding'
-                  'maximum_payment_date', 'customer_id', 'take_at', 'updated_at', 'created_at')
-        read_only_fields = ('created_at',)
-        # fields = '__all__'
+        fields = ('external_id', 'customer_id', 'customer_external_id', 'maximum_payment_date' 'amount', 'outstanding', 'status')
+        read_only_fields = ('created_at', 'status',)
+        
+    def get_customer_external_id(self, loan):
+        return loan.external_id

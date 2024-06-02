@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from api.models.customer import Customer
 from api.models.loan import Loan
-from utils.repositories.loan.loanrepository import LoanRepository
 
 
 class CustomerSerializer(serializers.ModelSerializer):

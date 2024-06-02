@@ -2,6 +2,7 @@ version: '3.9'
 
 services:
   django-app:
+    restart: always
     container_name: django-app
     image: my-django-app
     build:
@@ -22,6 +23,7 @@ services:
   django-db:
     container_name: django-db
     image: postgres:13
+    restart: always
     environment:
       POSTGRES_DB: loan_monitoring
       POSTGRES_USER: admin
