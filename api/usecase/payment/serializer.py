@@ -49,7 +49,7 @@ class PaymentSerializer(serializers.ModelSerializer):
                 payment_id=payment, **payment_detail_data)
             payment_detail.save()
             loan_updated = Loan.objects.get(id=extract_customer_id(str(payment_detail_data['loan_id'])))
-            if int(loan_updated.customer_id) == customer:
+            if int(loan_updated.customer_id.pk) == customer:
                 raise serializers.ValidationError(f'El cliente {str(payment_detail_data["loan_id"])} no cuenta con la deuda {str(payment_detail_data["loan_id"])}')
             loan_updated.amount -= payment_detail.amount
             if loan_updated.amount < 0:
