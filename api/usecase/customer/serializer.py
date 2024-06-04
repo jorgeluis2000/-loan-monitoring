@@ -15,8 +15,8 @@ class CustomerSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Customer
-        fields = ('external_id', 'score', 'status', 'preapproved_at')
-        read_only_fields = ('created_at', 'status',)
+        fields = ('id', 'external_id', 'score', 'status', 'preapproved_at')
+        read_only_fields = ('id', 'created_at', 'status',)
 
 
 class CustomerBalanceSerializer(serializers.ModelSerializer):
@@ -29,19 +29,22 @@ class CustomerBalanceSerializer(serializers.ModelSerializer):
         - total_debt: La deuda total del cliente.
         - available_amount: El monto disponible para el cliente.
     """
-    total_debt = serializers.SerializerMethodField()
-    available_amount = serializers.SerializerMethodField()
+    total_debt = serializers.SerializerMethodField('get_customer_total_debt')
+    available_amount = serializers.SerializerMethodField('get_customer_amount')
 
     class Meta:
         model = Customer
-        fields = ('external_id', 'score', 'total_debt', 'available_amount')
+        fields = ('external_id', 'score',
+                  'total_debt', 'available_amount')
 
     def get_customer_total_debt(self, customer: Customer) -> float:
         """Calcula la deuda total del cliente."""
-        total_debt = sum(float(loan.outstanding) for loan in Loan.objects.filter(customer_id=customer.id, status=2))
+        total_debt = sum(float(loan.outstanding) for loan in Loan.objects.filter(
+            customer_id=customer.id, status=2))
         return total_debt
 
     def get_customer_amount(self, customer: Customer) -> float:
         """Calcula el monto disponible para el cliente."""
-        available_amount = float(customer.score) - self.get_customer_total_debt(customer)
+        available_amount = float(customer.score) - \
+            self.get_customer_total_debt(customer)
         return available_amount

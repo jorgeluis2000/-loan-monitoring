@@ -19,9 +19,9 @@ class LoanSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Loan
-        fields = ('external_id', 'customer_id', 'maximum_payment_date',
+        fields = ('id', 'external_id', 'customer_id', 'maximum_payment_date',
                   'amount', 'outstanding', 'status',)
-        read_only_fields = ('created_at', 'status', 'outstanding',)
+        read_only_fields = ('id', 'created_at', 'status', 'outstanding',)
 
     @transaction.atomic
     def validate(self, data):
@@ -96,10 +96,10 @@ class LoanCreatedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Loan
-        fields = ('external_id', 'customer_external_id',
+        fields = ('id', 'external_id', 'customer_external_id',
                   'amount', 'outstanding', 'status')
-        read_only_fields = ('external_id', 'customer_external_id',
-                  'amount', 'outstanding', 'status',)
+        read_only_fields = ('id', 'external_id', 'customer_external_id',
+                            'amount', 'outstanding', 'status',)
 
     def get_customer_external_id(self, loan: Loan) -> str:
         """
@@ -145,9 +145,9 @@ class LoansByCustomerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Loan
-        fields = ('external_id', 'customer_external_id',
+        fields = ('id', 'external_id', 'customer_external_id',
                   'amount', 'outstanding', 'status')
-        read_only_fields = ('created_at', 'status',)
+        read_only_fields = ('id', 'created_at', 'status',)
 
     def get_customer_external_id(self, loan: Loan) -> str:
         """

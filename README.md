@@ -72,7 +72,22 @@ docker compose up -d --build
 ```
 
 ## Endpoints
-### Customers
+
+### Panel admin
+
+ - GET /admin
+
+### documentation
+
+ - GET /doc
+
+### Access functionalities
+
+ - GET /api/v1
+
+La siguiente lista se complementa con **`/api/v1`** para poder acceder a ellas.
+
+#### Customers
  - GET /customers/: Lista todos los clientes.
  - POST /customers/: Crea un nuevo cliente.
  - GET /customers/{id}/: Obtiene la información de un cliente específico.
@@ -82,20 +97,20 @@ docker compose up -d --build
  - GET /customers/{id}/loans/: Obtiene los préstamos del cliente.
  - GET /customers/{id}/payments/: Obtiene los pagos del cliente.
  - POST /create-customer-from-txt/: Crea clientes a partir de un archivo de texto.
-### Loans
+#### Loans
  - GET /loans/: Lista todos los préstamos.
  - POST /loans/: Crea un nuevo préstamo.
  - GET /loans/{id}/: Obtiene la información de un préstamo específico.
  - PUT /loans/{id}/: Actualiza la información de un préstamo específico.
  - DELETE /loans/{id}/: Elimina un préstamo específico.
  - GET /get-loans-by-customer/{id}/: Obtiene los préstamos por cliente.
-### Payments
+#### Payments
  - GET /payments/: Lista todos los pagos.
  - POST /payments/: Crea un nuevo pago.
  - GET /payments/{id}/: Obtiene la información de un pago específico.
  - PUT /payments/{id}/: Actualiza la información de un pago específico.
  - DELETE /payments/{id}/: Elimina un pago específico.
-### Payment Details
+#### Payment Details
  - GET /paymentdetails/: Lista todos los detalles de pagos.
  - POST /paymentdetails/: Crea un nuevo detalle de pago.
  - GET /paymentdetails/{id}/: Obtiene la información de un detalle de pago específico.
@@ -146,11 +161,5 @@ curl -X POST http://localhost:8000/customers/ -d '{"external_id": "12345", "scor
 2. Crear un préstamo:
 
 ```bash
-curl -X POST http://localhost:8000/customers/ -d '{"external_id": "12345", "score": 750}'
-```
-
-3. Crear un pago:
-
-```bash
-curl -X POST http://localhost:8000/customers/ -d '{"external_id": "12345", "score": 750}'
+curl -X POST http://localhost:8000/customers/ -d '{"external_id": "12345", "customer_id": "<customer_id>", "maximum_payment_date": "datetime","amount": 100}'
 ```
