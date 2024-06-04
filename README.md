@@ -87,6 +87,14 @@ docker compose up -d --build
 
 La siguiente lista se complementa con **`/api/v1`** para poder acceder a ellas.
 
+### Login
+
+ - GET /credentials/: Lista todos los usuarios.
+ - POST /credentials/: Crea un nuevo usuario.
+ - GET /credentials/{id}/: Obtiene la información de un usuario específico.
+ - PUT /credentials/{id}/: Actualiza la información de un usuario específico.
+ - PUT /credentials/login/: Te entrega el token de autenticación de dicho usuario para poder utilizar el resto de la API.
+
 #### Customers
  - GET /customers/: Lista todos los clientes.
  - POST /customers/: Crea un nuevo cliente.
