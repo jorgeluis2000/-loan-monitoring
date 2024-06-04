@@ -25,9 +25,9 @@ class PaymentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Payment
-        fields = ('external_id', 'customer_id', 'payments_loan_detail',
+        fields = ('id', 'external_id', 'customer_id', 'payments_loan_detail',
                   'created_at', 'updated_at', 'status', 'paid_at', 'total_amount')
-        read_only_fields = ('created_at', 'status', 'total_amount')
+        read_only_fields = ('id', 'created_at', 'status', 'total_amount')
 
     @transaction.atomic
     def create(self, validated_data):
@@ -111,9 +111,9 @@ class PaymentGetSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Payment
-        fields = ('external_id', 'customer_id', 'status', 'paid_at',
+        fields = ('id', 'external_id', 'customer_id', 'status', 'paid_at',
                   'total_amount', 'created_at', 'updated_at',)
-        read_only_fields = ('created_at', 'status', 'total_amount')
+        read_only_fields = ('id', 'created_at', 'status', 'total_amount')
 
 
 class PaymentCreatedSerializer(serializers.ModelSerializer):
@@ -139,9 +139,9 @@ class PaymentCreatedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Payment
-        fields = ('external_id', 'customer_external_id', 'loan_external_id',
+        fields = ('id', 'external_id', 'customer_external_id', 'loan_external_id',
                   'payment_date', 'status', 'total_amount', 'payment_amount', 'payments_details')
-        read_only_fields = ('external_id', 'customer_external_id', 'loan_external_id',
+        read_only_fields = ('id', 'external_id', 'customer_external_id', 'loan_external_id',
                             'payment_date', 'status', 'total_amount', 'payment_amount',)
 
     def get_customer_external_id(self, payment):
