@@ -1,5 +1,6 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
+from rest_framework.authentication import TokenAuthentication
 from api.usecase.payment.serializer import PaymentSerializer, PaymentCreatedSerializer, PaymentGetSerializer
 from api.models.payment import Payment
 
@@ -8,7 +9,8 @@ class PaymentViewSet(viewsets.ModelViewSet):
     API endpoint que permite ver, crear, actualizar o eliminar pagos.
     """
     queryset = Payment.objects.all()
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
     serializer_class = PaymentSerializer
     
     def get_serializer_class(self):

@@ -1,6 +1,7 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, action
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authentication import TokenAuthentication
 from api.usecase.loan.serializer import LoanSerializer, LoanCreatedSerializer, LoansByCustomerSerializer
 from api.models.loan import Loan
 
@@ -10,7 +11,8 @@ class LoanViewSet(viewsets.ModelViewSet):
     API endpoint que permite ver, crear, actualizar o eliminar préstamos.
     """
     queryset = Loan.objects.all()
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
     serializer_class = LoanSerializer
 
     def create(self, request, *args, **kwargs):
@@ -27,6 +29,8 @@ class LoanViewSet(viewsets.ModelViewSet):
 
 
 @api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def get_loans_by_customer(request, pk_customer):
     """
     Obtiene todos los préstamos asociados a un cliente específico.
