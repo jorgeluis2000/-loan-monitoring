@@ -1,6 +1,7 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
-from rest_framework.decorators import action, api_view
+from rest_framework.decorators import action, api_view,  authentication_classes, permission_classes
+from rest_framework.authentication import TokenAuthentication
 from api.usecase.customer.serializer import CustomerSerializer, CustomerBalanceSerializer
 from api.models.customer import Customer
 from api.models.loan import Loan
@@ -14,7 +15,8 @@ class CustomerViewSet(viewsets.ModelViewSet):
     API endpoint que permite ver, crear, actualizar o eliminar clientes.
     """
     queryset = Customer.objects.all()
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
     serializer_class = CustomerSerializer
 
     @action(methods=['GET'], detail=True,
@@ -67,6 +69,8 @@ class CustomerViewSet(viewsets.ModelViewSet):
 
 
 @api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def create_customers_from_txt(request):
     """
     Crea clientes a partir de un archivo de texto enviado mediante una solicitud POST.

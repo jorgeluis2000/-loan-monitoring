@@ -8,7 +8,7 @@ services:
     build:
       context: .
     ports:
-      - "8000:8000"
+      - "8000:80"
     environment:
       DEBUG: "True"
       SECRET_KEY: "your-secret-key"

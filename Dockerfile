@@ -18,7 +18,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Expone el puerto en el que se ejecutará la aplicación
-EXPOSE 8000
+EXPOSE 80
 
 # Establece el comando por defecto para ejecutar la aplicación
 CMD ["sh", "-c", "python manage.py makemigrations && python manage.py migrate && python manage.py createsuperuser --noinput || true && python manage.py runserver 0.0.0.0:8000"]
