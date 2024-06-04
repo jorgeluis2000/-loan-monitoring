@@ -130,9 +130,9 @@ class PaymentCreatedSerializer(serializers.ModelSerializer):
         - payment_amount: El monto del pago.
         - payments_details: Detalles del pago.
     """
-    customer_external_id = serializers.SerializerMethodField()
-    loan_external_id = serializers.SerializerMethodField()
-    payment_amount = serializers.SerializerMethodField()
+    customer_external_id = serializers.SerializerMethodField('get_customer_external_id')
+    loan_external_id = serializers.SerializerMethodField('get_loan_external_id')
+    payment_amount = serializers.SerializerMethodField('get_payment_amount')
     payment_date = serializers.DateTimeField(source='created_at')
     payments_details = PaymentDetailSerializer(
         many=True, source='paymentdetail_set')

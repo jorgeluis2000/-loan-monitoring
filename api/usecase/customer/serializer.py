@@ -11,7 +11,7 @@ class CustomerSerializer(serializers.ModelSerializer):
         - external_id: El identificador externo del cliente.
         - score: La puntuación del cliente.
         - status: El estado del cliente.
-        - preapproved_at: La fecha de preaprobación del cliente.
+        - preapproved_at: La fecha de pre aprobación del cliente.
     """
     class Meta:
         model = Customer
